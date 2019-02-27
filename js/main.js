@@ -4,8 +4,8 @@ import Complex from "./complex.js";
 let region = {
     firstPoint: new Complex(-2, -1),
     lastPoint: new Complex(1, 1),
-    widthPx: 300,
-    heightPx: 200
+    width: 300,
+    height: 200
 };
 let maxSteps = 20;
 

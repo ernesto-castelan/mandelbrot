@@ -8,16 +8,17 @@ export default {
 };
 
 const BYTES_PER_PIXEL = 4;
+const ESCAPE_RADIUS_SQUARE = 4;
 
 /**
  * Runs the escape time algorithm on a complex point.
  * Returns the number of steps needed to reach the escape condition,
- * that is when the resulting point has magnitude greater than two.
+ * that is, when the resulting point has magnitude greater than two.
  */
 function escapeTime(startPoint, maxSteps) {
     let stepCount = 0;
     let currentPoint = startPoint;
-    while (currentPoint.absSquare() <= 4 && stepCount < maxSteps) {
+    while (currentPoint.absSquare() <= ESCAPE_RADIUS_SQUARE && stepCount < maxSteps) {
         currentPoint = currentPoint.square().add(startPoint);
         stepCount += 1;
     }
@@ -25,18 +26,24 @@ function escapeTime(startPoint, maxSteps) {
 }
 
 /**
- * Renders the specified region.
- * Returns a matrix with the escape time of each pixel.
+ * Renders the specified region of the complex plane into a matrix.
+ * Returns the matrix with the escape time value for each rendered pixel.
+ *
+ * The region object must contain the following properties:
+ *   - width: Width of the render in pixels
+ *   - height: Height of the render in pixels
+ *   - firstPoint: Bottom-left point of the complex region
+ *   - lastPoint: Upper-right point of the complex region
  */
 function render(region, maxSteps) {
-    let matrix = createMatrix(region.widthPx, region.heightPx);
-    let realStep = (region.lastPoint.real - region.firstPoint.real) / (region.widthPx - 1);
-    let imagStep = (region.lastPoint.imag - region.firstPoint.imag) / (region.heightPx - 1);
+    let matrix = createMatrix(region.width, region.height);
+    let realDelta = (region.lastPoint.real - region.firstPoint.real) / (region.width - 1);
+    let imagDelta = (region.lastPoint.imag - region.firstPoint.imag) / (region.height - 1);
 
-    for (let realPx = 0; realPx < region.widthPx; realPx++) {
-        for (let imagPx = 0; imagPx < region.heightPx; imagPx++) {
-            let point = region.firstPoint.add(new Complex(realPx * realStep, imagPx * imagStep));
-            matrix[realPx][imagPx] = escapeTime(point, maxSteps)
+    for (let x = 0; x < region.width; x++) {
+        for (let y = 0; y < region.height; y++) {
+            let point = region.firstPoint.add(new Complex(x * realDelta, y * imagDelta));
+            matrix[x][y] = escapeTime(point, maxSteps)
         }
     }
     return matrix;
@@ -44,19 +51,20 @@ function render(region, maxSteps) {
 
 /**
  * Normalizes the matrix values.
- * All the resulting values will be in the range 0.0 to 1.0 inclusive.
+ * All the values will be in the range 0.0 to 1.0 inclusive.
  */
 function normalize(matrix, maxValue) {
-    for (let i = 0; i < matrix.length; i++) {
-        for (let j = 0; j < matrix[i].length; j++) {
-            matrix[i][j] /= maxValue;
+    for (let x = 0; x < matrix.length; x++) {
+        for (let y = 0; y < matrix[x].length; y++) {
+            matrix[x][y] /= maxValue;
         }
     }
     return matrix;
 }
 
 /**
- * Draws a normalized matrix in the specified canvas
+ * Draws the matrix into a canvas' pixel data.
+ * Assumes that the matrix is normalized.
  */
 function draw(matrix, imageData) {
     let width = imageData.width;
@@ -65,23 +73,27 @@ function draw(matrix, imageData) {
 
     for (let x = 0; x < width; x++) {
         for (let y = 0; y < height; y++) {
-            let pixelIdx = (y * width + x) * BYTES_PER_PIXEL;
-            let color = matrix[x][height - 1 - y] * 255;
+            // Canvas' y direction is reversed
+            let yCanvas = (height - 1) - y;
+            let index = (yCanvas * width + x) * BYTES_PER_PIXEL;
 
-            data[pixelIdx]     = color;
-            data[pixelIdx + 1] = color;
-            data[pixelIdx + 2] = color;
-            data[pixelIdx + 3] = 255;
+            let color = matrix[x][y] * 255;
+            data[index] = color;
+            data[index + 1] = color;
+            data[index + 2] = color;
+            data[index + 3] = 255;
         }
     }
     return imageData;
 }
 
-/** Creates a bi-dimensional array of size N x M */
-function createMatrix(n, m) {
-    let matrix = new Array(n);
-    for (let i = 0; i < n; i++) {
-        matrix[i] = new Array(m);
+/**
+ * Creates an empty matrix of the specified size
+ */
+function createMatrix(width, height) {
+    let matrix = new Array(width);
+    for (let i = 0; i < width; i++) {
+        matrix[i] = new Array(height);
     }
     return matrix;
 }

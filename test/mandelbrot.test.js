@@ -32,8 +32,8 @@ QUnit.test("Test render function", function(assert) {
     let region = {
         firstPoint: new Complex(-1, -1),
         lastPoint: new Complex(1, 1),
-        widthPx: 3,
-        heightPx: 5
+        width: 3,
+        height: 5
     };
     let result = mandelbrot.render(region, 3);
 
@@ -41,6 +41,7 @@ QUnit.test("Test render function", function(assert) {
     assert.equal(result[0].length, 5, "Size of first row is correct");
     assert.equal(result[1].length, 5, "Size of second row is correct");
     assert.equal(result[2].length, 5, "Size of third row is correct");
+    assert.strictEqual(result[3], undefined, "Fourth row doesn't exist")
 });
 
 QUnit.test("Test normalize function", function(assert) {
