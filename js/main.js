@@ -16,4 +16,4 @@ let canvas = document.getElementById('mainCanvas');
 let context = canvas.getContext('2d');
 let imageData = context.getImageData(0, 0, canvas.width, canvas.height);
 
-context.putImageData(mandelbrot.draw(imageData, matrix), 0, 0);
+context.putImageData(mandelbrot.draw(matrix, imageData), 0, 0);

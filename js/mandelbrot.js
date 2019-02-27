@@ -7,6 +7,8 @@ export default {
     draw: draw
 };
 
+const BYTES_PER_PIXEL = 4;
+
 /**
  * Runs the escape time algorithm on a complex point.
  * Returns the number of steps needed to reach the escape condition,
@@ -56,20 +58,20 @@ function normalize(matrix, maxValue) {
 /**
  * Draws a normalized matrix in the specified canvas
  */
-function draw(imageData, matrix) {
-    let width = matrix.length;
-    let height = matrix[0].length;
+function draw(matrix, imageData) {
+    let width = imageData.width;
+    let height = imageData.height;
     let data = imageData.data;
 
-    for (let i = 0; i < width; i++) {
-        for (let j = 0; j < height; j++) {
-            let destIdx = (i * width + j) * 4;
-            let color = matrix[i][j] * 255;
+    for (let x = 0; x < width; x++) {
+        for (let y = 0; y < height; y++) {
+            let pixelIdx = (y * width + x) * BYTES_PER_PIXEL;
+            let color = matrix[x][height - 1 - y] * 255;
 
-            data[destIdx]     = color;
-            data[destIdx + 1] = color;
-            data[destIdx + 2] = color;
-            data[destIdx + 3] = 255;
+            data[pixelIdx]     = color;
+            data[pixelIdx + 1] = color;
+            data[pixelIdx + 2] = color;
+            data[pixelIdx + 3] = 255;
         }
     }
     return imageData;
