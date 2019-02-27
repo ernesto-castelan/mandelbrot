@@ -18,10 +18,12 @@ const ESCAPE_RADIUS_SQUARE = 4;
 function escapeTime(startPoint, maxSteps) {
     let stepCount = 0;
     let currentPoint = startPoint;
+
     while (currentPoint.absSquare() <= ESCAPE_RADIUS_SQUARE && stepCount < maxSteps) {
         currentPoint = currentPoint.square().add(startPoint);
         stepCount += 1;
     }
+
     return stepCount;
 }
 
@@ -46,19 +48,28 @@ function render(region, maxSteps) {
             matrix[x][y] = escapeTime(point, maxSteps)
         }
     }
+
     return matrix;
 }
 
 /**
  * Normalizes the matrix values.
- * All the values will be in the range 0.0 to 1.0 inclusive.
+ * Values outside the [min, max] range will be clipped.
+ * The resulting values will be in the [0.0, 1.0] range.
  */
-function normalize(matrix, maxValue) {
+function normalize(matrix, min, max) {
+    let range = max - min;
+
     for (let x = 0; x < matrix.length; x++) {
         for (let y = 0; y < matrix[x].length; y++) {
-            matrix[x][y] /= maxValue;
+            let value = matrix[x][y];
+            if (value <= min) value = 0.0;
+            else if (value >= max) value = 1.0;
+            else value = (value - min) / range;
+            matrix[x][y] = value;
         }
     }
+
     return matrix;
 }
 
@@ -84,6 +95,7 @@ function draw(matrix, imageData) {
             data[index + 3] = 255;
         }
     }
+
     return imageData;
 }
 

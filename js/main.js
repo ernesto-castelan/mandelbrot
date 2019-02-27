@@ -10,7 +10,7 @@ let region = {
 let maxSteps = 20;
 
 let matrix = mandelbrot.render(region, maxSteps);
-matrix = mandelbrot.normalize(matrix, maxSteps);
+matrix = mandelbrot.normalize(matrix, 0, maxSteps);
 
 let canvas = document.getElementById('mainCanvas');
 let context = canvas.getContext('2d');

@@ -44,8 +44,16 @@ QUnit.test("Test render function", function(assert) {
     assert.strictEqual(result[3], undefined, "Fourth row doesn't exist")
 });
 
-QUnit.test("Test normalize function", function(assert) {
-   let result = mandelbrot.normalize([[0, 1, 2], [3, 4, 0]], 4);
+QUnit.test("Test normalize function simple case", function(assert) {
+    let matrix = [[0, 1, 2], [3, 4, 0]];
+    let result = mandelbrot.normalize(matrix, 0, 4);
 
-   assert.deepEqual(result, [[0.0, 0.25, 0.5], [0.75, 1.0, 0.0]], "Result is correct")
+    assert.deepEqual(result, [[0.0, 0.25, 0.5], [0.75, 1.0, 0.0]], "Result is correct")
+});
+
+QUnit.test("Test normalize function with clipping and offset", function(assert) {
+    let matrix = [[-1, 0, 2], [3, 4, 5]];
+    let result = mandelbrot.normalize(matrix, 2, 4);
+
+    assert.deepEqual(result, [[0.0, 0.0, 0.0], [0.5, 1.0, 1.0]], "Result is correct")
 });
