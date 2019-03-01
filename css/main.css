@@ -9,3 +9,11 @@
 .do-expand {
   width: 100%;
 }
+
+.has-text-light a {
+  color: whitesmoke !important;
+}
+
+.has-text-light a:hover {
+  text-decoration: underline;
+}
