@@ -1,6 +1,7 @@
 import Complex from './complex.js'
 
 export default {
+    runPipeline: runPipeline,
     escapeTime: escapeTime,
     render: render,
     normalize: normalize,
@@ -9,6 +10,15 @@ export default {
 
 const BYTES_PER_PIXEL = 4;
 const ESCAPE_RADIUS_SQUARE = 4;
+
+function runPipeline(params) {
+    let matrix = render(params.region, params.maxSteps);
+    matrix = normalize(matrix, 0, params.maxSteps);
+
+    let context = params.canvas.getContext('2d');
+    let imageData = context.getImageData(0, 0, params.canvas.width, params.canvas.height);
+    context.putImageData(draw(matrix, imageData), 0, 0);
+}
 
 /**
  * Runs the escape time algorithm on a complex point.

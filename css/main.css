@@ -1,0 +1,11 @@
+.do-align-top {
+  align-items: normal !important;
+}
+
+.do-small-padding {
+  padding: 8px 0 !important;
+}
+
+.do-expand {
+  width: 100%;
+}

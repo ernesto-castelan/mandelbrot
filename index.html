@@ -4,14 +4,62 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
   <link rel="stylesheet" href="css/bulma.css">
+  <link rel="stylesheet" href="css/main.css">
   <title>Mandelbrot Fractal</title>
 </head>
 <body>
-  <div class="container">
-    <h1>Mandelbrot</h1>
-    <canvas id="mainCanvas" width="300" height="200"></canvas>
+
+<section class="hero is-small is-fullheight">
+  <!-- HEADER -->
+  <div class="hero-head has-background-dark">
+    <div class="container is-fluid do-small-padding">
+      <h1 class="title has-text-light">Mandelbrot Fractal</h1>
+    </div>
   </div>
 
-  <script type="module" src="js/main.js"></script>
+  <div class="hero-body is-paddingless do-align-top">
+    <div class="container is-fluid">
+      <div class="columns is-gapless">
+      <!-- CANVAS -->
+      <div class="column">
+        <canvas class="do-expand" id="mainCanvas" width="600" height="450"></canvas>
+      </div>
+
+      <!-- PANEL -->
+      <div class="column is-one-third is-one-quarter-widescreen">
+        <div class="card">
+          <header class="card-header">
+            <p class="card-header-title">Render options</p>
+          </header>
+          <div class="card-content">
+            <form id="renderOptions">
+              <div class="field">
+                <label class="label" for="iterationExponent">Iterations (exponent)</label>
+                <div class="control">
+                  <input class="input" type="number" id="iterationExponent" name="iterationExponent"
+                         required maxlength="1" value="1.5" min="1" max="9" step="0.1">
+                </div>
+                <p class="help" id="helpIterationExponent"></p>
+              </div>
+              <div class="control">
+                <button class="button is-primary is-fullwidth" type="submit">Render</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="hero-foot has-background-grey">
+    <div class="container is-fluid do-small-padding">
+      <p class="has-text-light"><small>Footer</small></p>
+    </div>
+  </div>
+</section>
+
+<script type="module" src="js/main.js"></script>
 </body>
 </html>
